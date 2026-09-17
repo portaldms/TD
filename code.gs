@@ -1,18 +1,58 @@
 /**
- * SILAP-BMN - Backend Web API (Code.gs)
- * Arsitektur: REST API Decoupled untuk Frontend Blogger
+ * SILAP-BMN / SILAP-KDF - Backend Web API (Code.gs)
+ * Version: 2.8 (Optimized routing, unified transaction saver, robust error handling)
  */
 
 function doGet(e) {
-  try {
-    var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : 'getDatabaseData';
-    var forceRefresh = (e && e.parameter && e.parameter.nocache === '1');
+  return handleRequest(e);
+}
 
+function doPost(e) {
+  return handleRequest(e);
+}
+
+function handleRequest(e) {
+  try {
+    var params = (e && e.parameter) ? e.parameter : {};
+    var payload = {};
+    
+    if (e && e.postData && e.postData.contents) {
+      try {
+        payload = JSON.parse(e.postData.contents);
+      } catch (jsonErr) {
+        payload = {};
+      }
+    }
+
+    if (params.data) {
+      try {
+        var parsedData = JSON.parse(params.data);
+        for (var key in parsedData) {
+          payload[key] = parsedData[key];
+        }
+      } catch(dErr) {}
+    }
+
+    var action = params.action || payload.action || 'getDatabaseData';
+    var forceRefresh = (params.nocache === '1' || payload.nocache === 1 || params.nocache === 'true');
     var result;
-    if (action === 'getDatabaseData') {
-      result = getDatabaseData(forceRefresh);
-    } else {
-      result = { success: false, error: 'Aksi tidak dikenal: ' + action };
+
+    switch (action) {
+      case 'getDatabaseData':
+        result = getDatabaseData(forceRefresh);
+        break;
+      case 'addTransaksiKeluar':
+      case 'saveTransaksi':
+        result = saveTransaksi(payload);
+        break;
+      case 'updateTransaksi':
+        result = updateTransaksi(payload);
+        break;
+      case 'deleteTransaksi':
+        result = deleteTransaksi(payload);
+        break;
+      default:
+        result = { success: false, error: 'Aksi tidak dikenal: ' + action };
     }
 
     return ContentService
@@ -26,20 +66,40 @@ function doGet(e) {
   }
 }
 
-function doPost(e) {
-  return doGet(e);
+function getActiveSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  return ss.getSheetByName('DATA_BMN') || ss.getSheetByName('MasterData') || ss.getSheets()[0];
 }
 
-/**
- * Membaca & Mengolah Data Spreadsheet dengan Cepat
- */
+function formatRupiah(number) {
+  if (isNaN(number) || number === null) return "Rp 0";
+  return "Rp " + Math.round(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function formatDate(dateVal) {
+  if (!dateVal) return '';
+  if (dateVal instanceof Date) {
+    return Utilities.formatDate(dateVal, Session.getScriptTimeZone(), "yyyy-MM-dd");
+  }
+  return String(dateVal);
+}
+
+function fixDriveUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  var match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return "https://lh3.googleusercontent.com/d/" + match[1];
+  }
+  return url;
+}
+
 function getDatabaseData(forceRefresh) {
   try {
     var cache = CacheService.getScriptCache();
-    var cacheKey = 'SILAP_BMN_DB_DATA_V2';
+    var cacheKey = 'SILAP_BMN_DB_DATA_V5';
 
     if (forceRefresh) {
-      cache.remove(cacheKey); // Paksa hapus cache GAS saat ada permintaan data baru
+      cache.remove(cacheKey);
     } else {
       var cached = cache.get(cacheKey);
       if (cached) {
@@ -47,78 +107,79 @@ function getDatabaseData(forceRefresh) {
       }
     }
 
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheets = ss.getSheets();
-    var sheet = null;
-    
-    for (var s = 0; s < sheets.length; s++) {
-      if (sheets[s].getName().trim().toLowerCase() === 'sheet1') {
-        sheet = sheets[s];
-        break;
-      }
-    }
-    
-    if (!sheet) {
-      sheet = sheets[0];
-    }
-
+    var sheet = getActiveSheet();
     var lastRow = sheet.getLastRow();
     if (lastRow < 2) {
       return { success: true, items: [] };
     }
 
     var rawData = sheet.getRange(2, 1, lastRow - 1, 26).getValues();
-
     var itemsList = [];
-    var currentItem = null;
+    var itemMap = {};
+    var lastMasterItem = null;
 
     for (var i = 0; i < rawData.length; i++) {
       var row = rawData[i];
+      var actualRowIndex = i + 2;
 
       var no = row[0];
       var kodeSatker = row[1];
       var kodeBarang = row[2];
-      var nup = row[3];
-      var namaBarang = row[4];
+      var nup = String(row[3] || '').trim();
+      var namaBarang = String(row[4] || '').trim();
       var tahun = row[5];
       var nilaiPerolehan = row[6];
       var merk = row[7];
       var tipe = row[8];
       var kondisi = row[9];
       var jenisBmn = row[10];
-      var nopol = row[11];
+      var nopol = String(row[11] || '').trim();
+      var linkDokumen = row[12];
       var foto = row[13];
 
-      if (String(namaBarang).trim() !== "" || String(nopol).trim() !== "" || String(nup).trim() !== "") {
-        var itemId = "ITEM_" + (nup || i) + "_" + String(nopol || i).replace(/\s+/g, '');
+      var currentItem = null;
+
+      if (namaBarang !== "" || nup !== "" || nopol !== "") {
+        var itemId = "ITEM_" + (nup || ('IDX_' + i)) + "_" + nopol.replace(/\s+/g, '');
         
-        var numericNilai = 0;
-        if (typeof nilaiPerolehan === 'number') {
-          numericNilai = nilaiPerolehan;
-        } else if (typeof nilaiPerolehan === 'string') {
-          numericNilai = parseFloat(nilaiPerolehan.replace(/[^0-9.-]+/g, "")) || 0;
+        if (!itemMap[itemId]) {
+          var numericNilai = 0;
+          if (typeof nilaiPerolehan === 'number') {
+            numericNilai = nilaiPerolehan;
+          } else if (typeof nilaiPerolehan === 'string') {
+            numericNilai = parseFloat(nilaiPerolehan.replace(/[^0-9.-]+/g, "")) || 0;
+          }
+
+          currentItem = {
+            id: itemId,
+            masterRowIndex: actualRowIndex,
+            no: no || (itemsList.length + 1),
+            kodeSatker: String(kodeSatker || '-'),
+            kodeBarang: String(kodeBarang || '-'),
+            nup: nup || '-',
+            namaBarang: namaBarang || '-',
+            tahun: String(tahun || '-'),
+            nilaiPerolehan: numericNilai,
+            nilaiPerolehanFormatted: formatRupiah(numericNilai),
+            merk: String(merk || '-'),
+            tipe: String(tipe || '-'),
+            kondisi: String(kondisi || 'Baik'),
+            jenisBmn: String(jenisBmn || '-'),
+            nopol: nopol || '-',
+            linkDokumen: String(linkDokumen || ''),
+            foto: fixDriveUrl(foto),
+            history: []
+          };
+
+          itemMap[itemId] = currentItem;
+          itemsList.push(currentItem);
+          lastMasterItem = currentItem;
+        } else {
+          currentItem = itemMap[itemId];
+          lastMasterItem = currentItem;
         }
-
-        currentItem = {
-          id: itemId,
-          no: no || (itemsList.length + 1),
-          kodeSatker: String(kodeSatker || '-'),
-          kodeBarang: String(kodeBarang || '-'),
-          nup: String(nup || '-'),
-          namaBarang: String(namaBarang || '-'),
-          tahun: String(tahun || '-'),
-          nilaiPerolehan: numericNilai,
-          nilaiPerolehanFormatted: formatRupiah(numericNilai),
-          merk: String(merk || '-'),
-          tipe: String(tipe || '-'),
-          kondisi: String(kondisi || 'Baik'),
-          jenisBmn: String(jenisBmn || '-'),
-          nopol: String(nopol || '-'),
-          foto: fixDriveUrl(foto),
-          history: []
-        };
-
-        itemsList.push(currentItem);
+      } else {
+        currentItem = lastMasterItem;
       }
 
       if (currentItem) {
@@ -127,63 +188,141 @@ function getDatabaseData(forceRefresh) {
 
         if (tglKeluar || row[15] || tglMasuk || row[21]) {
           currentItem.history.push({
+            rowIndex: actualRowIndex,
             trxNo: currentItem.history.length + 1,
             keluarTgl: tglKeluar || '-',
             keluarPetugasSerah: String(row[15] || '-'),
             keluarPetugasTerima: String(row[16] || '-'),
             keluarBA: String(row[17] || '-'),
             keluarFoto: fixDriveUrl(row[18]),
+            keluarFotoRaw: String(row[18] || ''),
             keluarLokasi: String(row[19] || '-'),
             masukTgl: tglMasuk || '-',
             masukPetugasTerima: String(row[21] || '-'),
             masukPetugasSerah: String(row[22] || '-'),
             masukBA: String(row[23] || '-'),
             masukFoto: fixDriveUrl(row[24]),
+            masukFotoRaw: String(row[24] || ''),
             masukLokasi: String(row[25] || '-')
           });
         }
       }
     }
 
-    var responsePayload = {
-      success: true,
-      items: itemsList
-    };
+    var result = { success: true, items: itemsList };
+    cache.put(cacheKey, JSON.stringify(result), 300);
+    return result;
 
-    try {
-      cache.put(cacheKey, JSON.stringify(responsePayload), 300);
-    } catch (cErr) {}
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
 
-    return responsePayload;
+function saveTransaksi(payload) {
+  try {
+    var rowIndex = payload.rowIndex ? parseInt(payload.rowIndex) : null;
+    var sheet = getActiveSheet();
+    var lastRow = sheet.getLastRow();
+
+    var trxValues = [
+      payload.keluarTgl || '',
+      payload.keluarPetugasSerah || '',
+      payload.keluarPetugasTerima || '',
+      payload.keluarBA || '',
+      payload.keluarFoto || '',
+      payload.keluarLokasi || '',
+      payload.masukTgl || '',
+      payload.masukPetugasTerima || '',
+      payload.masukPetugasSerah || '',
+      payload.masukBA || '',
+      payload.masukFoto || '',
+      payload.masukLokasi || ''
+    ];
+
+    if (rowIndex && rowIndex >= 2) {
+      // Update existing row
+      sheet.getRange(rowIndex, 15, 1, 12).setValues([trxValues]);
+    } else {
+      // Find master row index to attach or insert
+      var targetMasterIndex = -1;
+      if (payload.masterRowIndex && !isNaN(parseInt(payload.masterRowIndex))) {
+        targetMasterIndex = parseInt(payload.masterRowIndex);
+      }
+
+      if (targetMasterIndex === -1 && lastRow >= 2) {
+        var data = sheet.getRange(2, 1, lastRow - 1, 14).getValues();
+        var targetNup = String(payload.nup || '').trim().toLowerCase();
+        var targetNopol = String(payload.nopol || '').trim().toLowerCase();
+
+        for (var i = 0; i < data.length; i++) {
+          var rowNup = String(data[i][3] || '').trim().toLowerCase();
+          var rowNopol = String(data[i][11] || '').trim().toLowerCase();
+          
+          if ((targetNup !== '' && targetNup !== '-' && rowNup === targetNup) || 
+              (targetNopol !== '' && targetNopol !== '-' && rowNopol === targetNopol)) {
+            targetMasterIndex = i + 2;
+            break;
+          }
+        }
+      }
+
+      if (targetMasterIndex === -1) {
+        return { success: false, error: "Master data barang tidak ditemukan di Spreadsheet." };
+      }
+
+      // Check if master row's transaction columns (O-Z) are empty
+      var masterTrxValues = sheet.getRange(targetMasterIndex, 15, 1, 12).getValues()[0];
+      var isMasterTrxEmpty = masterTrxValues.every(function(val) { return val === "" || val === null; });
+
+      var targetRowNumber;
+      if (isMasterTrxEmpty) {
+        targetRowNumber = targetMasterIndex;
+      } else {
+        var dataFull = sheet.getRange(2, 1, Math.max(lastRow - 1, 1), 12).getValues();
+        var insertRowIndex = targetMasterIndex;
+
+        for (var j = targetMasterIndex - 1; j < dataFull.length; j++) {
+          var hasMasterInfo = (String(dataFull[j][4] || '').trim() !== '' || 
+                               String(dataFull[j][3] || '').trim() !== '' || 
+                               String(dataFull[j][11] || '').trim() !== '');
+          if (hasMasterInfo && (j + 2 !== targetMasterIndex)) {
+            break;
+          }
+          insertRowIndex = j + 2;
+        }
+
+        sheet.insertRowAfter(insertRowIndex);
+        targetRowNumber = insertRowIndex + 1;
+      }
+
+      sheet.getRange(targetRowNumber, 15, 1, 12).setValues([trxValues]);
+    }
+
+    CacheService.getScriptCache().remove('SILAP_BMN_DB_DATA_V5');
+    return { success: true, message: "Transaksi berhasil disimpan!" };
 
   } catch (err) {
     return { success: false, error: err.toString() };
   }
 }
 
-function formatRupiah(val) {
-  if (!val || isNaN(val)) return 'Rp 0';
-  return 'Rp ' + Math.round(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+function updateTransaksi(payload) {
+  return saveTransaksi(payload);
 }
 
-function formatDate(d) {
-  if (!d) return '';
-  if (d instanceof Date) {
-    var day = ("0" + d.getDate()).slice(-2);
-    var month = ("0" + (d.getMonth() + 1)).slice(-2);
-    var year = d.getFullYear();
-    return day + "/" + month + "/" + year;
-  }
-  return String(d);
-}
-
-function fixDriveUrl(url) {
-  if (!url || typeof url !== 'string') return '';
-  if (url.indexOf('drive.google.com') !== -1) {
-    var match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      return 'https://lh3.googleusercontent.com/d/' + match[1];
+function deleteTransaksi(payload) {
+  try {
+    var rowIndex = parseInt(payload.rowIndex);
+    if (!rowIndex || rowIndex < 2) {
+      return { success: false, error: "Index baris tidak valid." };
     }
+
+    var sheet = getActiveSheet();
+    sheet.getRange(rowIndex, 15, 1, 12).clearContent();
+    CacheService.getScriptCache().remove('SILAP_BMN_DB_DATA_V5');
+
+    return { success: true, message: "Transaksi riwayat berhasil dihapus." };
+  } catch (err) {
+    return { success: false, error: err.toString() };
   }
-  return url;
 }
