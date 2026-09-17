@@ -1,4 +1,3 @@
-<!-- SILAP-BMN Frontend - Standalone Fullscreen WebApp for Blogger -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -33,7 +32,7 @@
     bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    z-index: 2147483647 !important;
+    z-index: 2147483640 !important;
     overflow-y: auto !important;
     background-color: var(--bg-light) !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -77,8 +76,8 @@
   }
 
   .img-thumb {
-    width: 60px;
-    height: 45px;
+    width: 55px;
+    height: 40px;
     object-fit: cover;
     border-radius: 6px;
     border: 1px solid #e2e8f0;
@@ -103,76 +102,67 @@
   .trx-keluar-header { background-color: #fff7ed; color: #9a3412; font-weight: bold; }
   .trx-masuk-header { background-color: #f0fdf4; color: #166534; font-weight: bold; }
 
+  .modal {
+    z-index: 2147483647 !important;
+    background: rgba(15, 23, 42, 0.75) !important;
+    backdrop-filter: blur(3px);
+  }
+
+  .modal-backdrop {
+    display: none !important;
+  }
+
+  .modal-dialog {
+    z-index: 2147483648 !important;
+    margin-top: 50px;
+  }
+
+  .modal-content {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    border-radius: 12px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+    overflow: hidden;
+  }
+
+  .modal .form-control, .modal .form-select {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    cursor: text !important;
+    font-size: 0.875rem !important;
+  }
+
+  .modal .form-control:focus, .modal .form-select:focus {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25) !important;
+  }
+
   .spin-anim {
     animation: spin 1s linear infinite;
   }
   @keyframes spin { 100% { transform: rotate(360deg); } }
 
+  .print-header { display: none; }
+
   @page {
     size: A4 landscape;
-    margin: 8mm;
+    margin: 10mm 8mm 10mm 8mm;
   }
 
   @media print {
-    * {
-      background: transparent !important;
-      background-color: transparent !important;
-      box-shadow: none !important;
-      text-shadow: none !important;
-      filter: none !important;
-      border: none !important;
-      outline: none !important;
-      -webkit-print-color-adjust: economy !important;
-      print-color-adjust: economy !important;
-    }
-    *:before, *:after {
-      background: transparent !important;
-      box-shadow: none !important;
-      border: none !important;
-    }
-
-    .no-print, 
-    .no-print *, 
-    .card:not(.detail-card),
-    .nav, 
-    .nav-pills, 
-    .nav-item, 
-    .nav-link,
-    #pills-tab, 
-    .btn, 
-    .input-group, 
-    .form-select, 
-    select,
-    input,
-    #syncStatusBadge,
-    #refreshIcon,
-    #loadingSpinner,
-    #errorRetryBox,
-    hr,
-    .border-bottom { 
-      display: none !important; 
-      visibility: hidden !important;
-      opacity: 0 !important;
-      height: 0 !important;
-      max-height: 0 !important;
-      width: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border: none !important;
-      outline: none !important;
-      overflow: hidden !important;
-    }
-
     html, body {
       margin: 0 !important;
       padding: 0 !important;
       width: 100% !important;
       height: auto !important;
-      min-height: 100% !important;
+      min-height: auto !important;
       overflow: visible !important;
       background: #ffffff !important;
-      background-color: #ffffff !important;
-      font-size: 9pt !important;
       color: #000000 !important;
     }
 
@@ -180,59 +170,81 @@
       position: static !important;
       top: auto !important;
       left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
       width: 100% !important;
       height: auto !important;
       overflow: visible !important;
-      padding: 0 !important;
       background: #ffffff !important;
-      background-color: #ffffff !important;
-    }
-
-    .container-fluid {
       padding: 0 !important;
       margin: 0 !important;
-      width: 100% !important;
     }
 
-    .detail-card {
+    .no-print, 
+    .btn, 
+    .input-group, 
+    select, 
+    input, 
+    #syncStatusBadge, 
+    #loadingSpinner, 
+    .nav, 
+    .nav-pills, 
+    .modal, 
+    .modal-backdrop,
+    .btn-group { 
+      display: none !important; 
+    }
+
+    .print-header {
+      display: block !important;
+      text-align: center;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #000;
+      padding-bottom: 6px;
+    }
+
+    .print-header h5 {
+      margin: 0;
+      font-weight: bold;
+      font-size: 13pt;
+      color: #000;
+      text-transform: uppercase;
+    }
+
+    .print-header p {
+      margin: 3px 0 0 0;
+      font-size: 8.5pt;
+      color: #222;
+    }
+
+    .detail-card, .card {
       box-shadow: none !important;
       border: none !important;
       padding: 0 !important;
       margin: 0 !important;
-      background: #ffffff !important;
-      display: block !important;
+      background: transparent !important;
     }
 
-    .table-responsive, 
-    .table-custom {
+    .table-responsive, .table-custom {
       overflow: visible !important;
-      display: block !important;
       box-shadow: none !important;
       border: none !important;
-      background: #ffffff !important;
-      margin: 0 !important;
-      padding: 0 !important;
+      border-radius: 0 !important;
     }
 
-    table, .table {
+    table {
       width: 100% !important;
       border-collapse: collapse !important;
-      border-spacing: 0 !important;
-      page-break-inside: auto;
-      margin-bottom: 0 !important;
-      border: 1px solid #000000 !important;
-      background-color: #ffffff !important;
-    }
-
-    .table > :not(caption) > * > * {
-      box-shadow: none !important;
-      border-bottom-width: 0 !important;
-      background-color: #ffffff !important;
-      color: #000000 !important;
+      font-size: 8pt !important;
+      page-break-inside: auto !important;
     }
 
     thead {
       display: table-header-group !important;
+    }
+
+    tbody {
+      display: table-row-group !important;
     }
 
     tr {
@@ -241,44 +253,36 @@
     }
 
     th, td {
-      padding: 4px 6px !important;
       border: 1px solid #000000 !important;
-      outline: none !important;
-      box-shadow: none !important;
-      background-color: #ffffff !important;
+      padding: 4px 6px !important;
       color: #000000 !important;
+      vertical-align: middle !important;
     }
 
-    .table-custom th,
-    .bg-dark, .bg-primary, .bg-secondary, .bg-info, .bg-success, .bg-danger, .bg-warning,
-    .trx-keluar-header, .trx-masuk-header {
-      background-color: #ffffff !important;
-      background: #ffffff !important;
+    th {
+      background-color: #f1f5f9 !important;
       color: #000000 !important;
       font-weight: bold !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
 
     .badge {
-      border: 1px solid #000000 !important;
+      border: none !important;
       color: #000000 !important;
+      padding: 0 !important;
+      font-size: 8pt !important;
       background: transparent !important;
-      padding: 2px 5px !important;
     }
 
     .img-thumb {
-      width: 45px !important;
-      height: 32px !important;
-      border: 1px solid #000000 !important;
+      width: 42px !important;
+      height: 30px !important;
     }
 
     .img-preview-lg {
-      max-height: 160px !important;
-      border: 1px solid #000000 !important;
-    }
-
-    a {
-      text-decoration: none !important;
-      color: #000000 !important;
+      max-height: 110px !important;
+      width: auto !important;
     }
   }
 </style>
@@ -286,12 +290,18 @@
 <div id="silapAppContainer">
   <div class="container-fluid px-4">
 
-    <!-- Header Navigation Bar -->
+    <!-- Kop Cetak Resmi -->
+    <div class="print-header">
+      <h5>LAPORAN MONITORING & RIWAYAT KENDARAAN DINAS FUNGSIONAL (SILAP-KDF)</h5>
+      <p>Sistem Informasi Pengelolaan Aset BMN Tanggap Darurat</p>
+    </div>
+
+    <!-- Header App Bar -->
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom no-print">
       <div class="d-flex align-items-center gap-2">
         <i class="bi bi-truck fs-3 text-primary"></i>
         <div>
-          <h4 class="fw-bold mb-0">SILAP-KDF BMN TD <small class="fs-6 text-muted fw-normal">| Monitoring Aset</small></h4>
+          <h4 class="fw-bold mb-0">SILAP-KDF BMN TD <small class="fs-6 text-muted fw-normal">| Monitoring Aset & CRUD Riwayat</small></h4>
           <span id="syncStatusBadge" class="badge bg-secondary">Memeriksa Cache...</span>
         </div>
       </div>
@@ -300,7 +310,7 @@
       </button>
     </div>
 
-    <!-- Loading Spinner & Diagnostics Box -->
+    <!-- Loading Spinner & Error Retry Box -->
     <div id="loadingSpinner" class="text-center py-5">
       <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
       <p id="loadingText" class="mt-3 text-muted fw-semibold">Memuat Data dari Web API Apps Script...</p>
@@ -313,9 +323,6 @@
           <div class="d-flex gap-2 flex-wrap">
             <button class="btn btn-primary btn-sm" onclick="fetchDatabaseData(true)">
               <i class="bi bi-arrow-repeat me-1"></i> Coba Lagi
-            </button>
-            <button class="btn btn-outline-secondary btn-sm" onclick="testDirectConnection()">
-              <i class="bi bi-box-arrow-up-right me-1"></i> Tes URL Backend Langsung
             </button>
           </div>
         </div>
@@ -383,7 +390,7 @@
                 </tr>
               </thead>
               <tbody id="rekapTableBody">
-                <!-- Data populated dynamically -->
+                <!-- Dynamic Rows -->
               </tbody>
             </table>
           </div>
@@ -394,7 +401,7 @@
           <div class="card border-0 shadow-sm p-3 mb-4 no-print">
             <label class="form-label fw-bold text-dark"><i class="bi bi-funnel me-1"></i> Pilih Barang / Kendaraan:</label>
             <select id="selectBarang" class="form-select form-select-lg" onchange="renderDetailBarang(this.value)">
-              <!-- Options populated dynamically -->
+              <!-- Dynamic Options -->
             </select>
           </div>
 
@@ -407,17 +414,154 @@
 
     </div>
 
+    <!-- Modal Form Transaksi -->
+    <div class="modal fade" id="modalTrxForm" tabindex="-1" aria-hidden="true" data-bs-backdrop="false">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title fw-bold" id="modalTrxTitle"><i class="bi bi-pencil-square me-2"></i> Form Transaksi Riwayat</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="closeModalDirectly()" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div id="formAlertBox" class="alert alert-danger py-2 px-3 small mb-3" style="display: none;"></div>
+
+            <form id="trxForm" onsubmit="return false;">
+              <input type="hidden" id="formRowIndex" value="">
+              <input type="hidden" id="formMasterRowIndex" value="">
+              <input type="hidden" id="formItemNup" value="">
+              <input type="hidden" id="formItemNopol" value="">
+
+              <!-- SEKSI KELUAR -->
+              <div class="p-3 bg-light rounded border mb-3">
+                <h6 class="fw-bold text-danger mb-3"><i class="bi bi-box-arrow-up-right me-1"></i> DATA BARANG KELUAR (PEMINJAMAN)</h6>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Tanggal Keluar</label>
+                    <input type="date" id="formKeluarTgl" class="form-control">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Petugas Serah</label>
+                    <input type="text" id="formKeluarPetugasSerah" class="form-control" placeholder="Petugas Penyerah">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Petugas Terima (Peminjam)</label>
+                    <input type="text" id="formKeluarPetugasTerima" class="form-control" placeholder="Penerima / Peminjam">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">No. BA / Jenis</label>
+                    <input type="text" id="formKeluarBA" class="form-control" placeholder="No Berita Acara">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">URL Foto Kegiatan</label>
+                    <input type="text" id="formKeluarFoto" class="form-control" placeholder="URL Google Drive / Image">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Lokasi Pinjam</label>
+                    <input type="text" id="formKeluarLokasi" class="form-control" placeholder="Lokasi Tujuan">
+                  </div>
+                </div>
+              </div>
+
+              <!-- SEKSI MASUK -->
+              <div class="p-3 bg-light rounded border">
+                <h6 class="fw-bold text-success mb-3"><i class="bi bi-box-arrow-in-down-left me-1"></i> DATA BARANG MASUK (PENGEMBALIAN)</h6>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Tanggal Masuk</label>
+                    <input type="date" id="formMasukTgl" class="form-control">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Petugas Terima</label>
+                    <input type="text" id="formMasukPetugasTerima" class="form-control" placeholder="Petugas Penerima">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Petugas Serah</label>
+                    <input type="text" id="formMasukPetugasSerah" class="form-control" placeholder="Pengembali">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">No. BA / Jenis</label>
+                    <input type="text" id="formMasukBA" class="form-control" placeholder="No Berita Acara">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">URL Foto Kegiatan</label>
+                    <input type="text" id="formMasukFoto" class="form-control" placeholder="URL Google Drive / Image">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Lokasi Kembali</label>
+                    <input type="text" id="formMasukLokasi" class="form-control" placeholder="Lokasi Penyerahan">
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" onclick="closeModalDirectly()">Batal</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="submitTrxForm()" id="btnSubmitForm">
+              <i class="bi bi-save me-1"></i> Simpan Transaksi
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // PASTE GOOGLE APPS SCRIPT WEB APP URL DI BAWAH INI:
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzd3lcW5b9H1V1qkAwO6SY8CSpHPUalHkc3OAqQrjp76pZqMnfR3LaQ7zkUsxA0FkYP/exec";
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcG9HMIl1MOwJ-ysqQ9xTWQGm1sxs44zVTuTo3rkRwTxanAPsCdQtKwvH-_AXXRkq_Qg/exec";
   const CACHE_KEY = "SILAP_FRONTEND_CACHE_DATA";
 
   let globalData = [];
+
+  function showToastNotice(message, isError = false) {
+    const syncBadge = document.getElementById('syncStatusBadge');
+    if (syncBadge) {
+      syncBadge.className = isError ? 'badge bg-danger text-white' : 'badge bg-success text-white';
+      syncBadge.innerHTML = message;
+      setTimeout(() => {
+        syncBadge.className = 'badge bg-success';
+        syncBadge.innerHTML = '<i class="bi bi-cloud-check me-1"></i> Data Terkini';
+      }, 4000);
+    }
+  }
+
+  function formatDateForInput(dateStr) {
+    if (!dateStr || dateStr === '-') return '';
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) {
+      return d.toISOString().split('T')[0];
+    }
+    return dateStr;
+  }
+
+  function getModalInstance() {
+    const modalEl = document.getElementById('modalTrxForm');
+    if (!modalEl) return null;
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      return bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+    }
+    return null;
+  }
+
+  function removeStrayBackdrops() {
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+  }
+
+  function closeModalDirectly() {
+    const modalInstance = getModalInstance();
+    if (modalInstance) {
+      modalInstance.hide();
+    }
+    const modalEl = document.getElementById('modalTrxForm');
+    if (modalEl) {
+      modalEl.classList.remove('show');
+      modalEl.style.display = 'none';
+    }
+    removeStrayBackdrops();
+  }
 
   document.addEventListener("DOMContentLoaded", function() {
     const appEl = document.getElementById('silapAppContainer');
@@ -455,23 +599,6 @@
     const errorRetryBox = document.getElementById('errorRetryBox');
     const refreshIcon = document.getElementById('refreshIcon');
 
-    const isPlaceholder = !GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("AKfycbx...");
-    const isEditUrl = GAS_WEB_APP_URL.includes("/edit");
-
-    if (isPlaceholder || isEditUrl) {
-      loadingSpinner.style.display = 'block';
-      mainContent.style.display = 'none';
-      errorRetryBox.style.display = 'block';
-      
-      let msg = isEditUrl 
-        ? `<strong>URL Backend Salah Format!</strong> Wajib berakhiran <code>/exec</code>.`
-        : `<strong>URL Web App Belum Diganti!</strong> Silakan ganti variabel <code>GAS_WEB_APP_URL</code>.`;
-      
-      document.getElementById('errorMessage').innerHTML = msg;
-      updateSyncBadge('bg-danger', '<i class="bi bi-x-circle me-1"></i> URL Belum Diset');
-      return;
-    }
-
     if (refreshIcon) refreshIcon.classList.add('spin-anim');
     updateSyncBadge('bg-warning text-dark', '<i class="bi bi-arrow-repeat me-1"></i> Memperbarui Data...');
 
@@ -481,22 +608,13 @@
       errorRetryBox.style.display = 'none';
     }
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25000);
-
     try {
-      // Penambahan timestamp (_t) untuk membypass HTTP browser caching secara penuh
       const timestamp = new Date().getTime();
       const url = forceRefresh 
         ? `${GAS_WEB_APP_URL}?action=getDatabaseData&nocache=1&_t=${timestamp}` 
         : `${GAS_WEB_APP_URL}?action=getDatabaseData&_t=${timestamp}`;
       
-      const response = await fetch(url, { 
-        signal: controller.signal,
-        cache: 'no-store'
-      });
-      clearTimeout(timeoutId);
-
+      const response = await fetch(url, { cache: 'no-store' });
       if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
       const res = await response.json();
@@ -525,12 +643,6 @@
       }
     } finally {
       if (refreshIcon) refreshIcon.classList.remove('spin-anim');
-    }
-  }
-
-  function testDirectConnection() {
-    if (GAS_WEB_APP_URL && !GAS_WEB_APP_URL.includes("AKfycbx...")) {
-      window.open(`${GAS_WEB_APP_URL}?action=getDatabaseData&nocache=1`, '_blank');
     }
   }
 
@@ -643,27 +755,37 @@
 
     let historyRows = '';
     if (!item.history || item.history.length === 0) {
-      historyRows = '<tr><td colspan="13" class="text-center py-4 text-muted">Belum ada riwayat peminjaman / pengembalian.</td></tr>';
+      historyRows = '<tr><td colspan="14" class="text-center py-4 text-muted">Belum ada riwayat peminjaman / pengembalian.</td></tr>';
     } else {
-      item.history.forEach(h => {
-        const imgKeluar = h.keluarFoto ? `<a href="${h.keluarFoto}" target="_blank"><img src="${h.keluarFoto}" class="img-thumb"></a>` : '-';
-        const imgMasuk = h.masukFoto ? `<a href="${h.masukFoto}" target="_blank"><img src="${h.masukFoto}" class="img-thumb"></a>` : '-';
+      item.history.forEach((h) => {
+        const imgKeluar = h.keluarFoto ? `<a href="${h.keluarFoto}" target="_blank" class="btn btn-xs btn-outline-secondary"><i class="bi bi-image"></i> Lihat</a>` : '-';
+        const imgMasuk = h.masukFoto ? `<a href="${h.masukFoto}" target="_blank" class="btn btn-xs btn-outline-secondary"><i class="bi bi-image"></i> Lihat</a>` : '-';
 
         historyRows += `
           <tr>
             <td class="text-center fw-bold">${h.trxNo}</td>
-            <td class="fw-semibold">${h.keluarTgl}</td>
+            <td class="fw-semibold text-nowrap">${h.keluarTgl}</td>
             <td>${h.keluarPetugasSerah}</td>
             <td>${h.keluarPetugasTerima}</td>
             <td>${h.keluarBA}</td>
-            <td class="text-center">${imgKeluar}</td>
+            <td class="text-center no-print">${imgKeluar}</td>
             <td>${h.keluarLokasi}</td>
-            <td class="fw-semibold">${h.masukTgl}</td>
+            <td class="fw-semibold text-nowrap">${h.masukTgl}</td>
             <td>${h.masukPetugasTerima}</td>
             <td>${h.masukPetugasSerah}</td>
             <td>${h.masukBA}</td>
-            <td class="text-center">${imgMasuk}</td>
+            <td class="text-center no-print">${imgMasuk}</td>
             <td>${h.masukLokasi}</td>
+            <td class="text-center no-print">
+              <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-primary" title="Edit Transaksi" onclick="openEditModal('${item.id}', ${h.rowIndex})">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button type="button" class="btn btn-outline-danger" title="Hapus Transaksi" onclick="deleteTransaksiConfirm(${h.rowIndex})">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
           </tr>
         `;
       });
@@ -673,9 +795,14 @@
       <div class="detail-card">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h4 class="fw-bold text-primary mb-0"><i class="bi bi-truck me-2"></i> Laporan Peminjaman Kendaraan Dinas Fungsional - TANGGAP DARURAT</h4>
-          <button class="btn btn-outline-dark btn-sm no-print" onclick="window.print()">
-            <i class="bi bi-printer me-1"></i> Cetak Kartu Kendaraan
-          </button>
+          <div class="no-print">
+            <button type="button" class="btn btn-success btn-sm me-2" onclick="openAddModal('${item.id}')">
+              <i class="bi bi-plus-circle me-1"></i> Tambah Transaksi Riwayat
+            </button>
+            <button type="button" class="btn btn-outline-dark btn-sm" onclick="window.print()">
+              <i class="bi bi-printer me-1"></i> Cetak Kartu Kendaraan
+            </button>
+          </div>
         </div>
 
         <div class="row g-4 mb-4">
@@ -709,19 +836,20 @@
                 <th rowspan="2" class="text-center bg-dark text-white align-middle">No</th>
                 <th colspan="6" class="text-center trx-keluar-header">KDF BARANG KELUAR (PEMINJAMAN)</th>
                 <th colspan="6" class="text-center trx-masuk-header">KDF BARANG MASUK (PENGEMBALIAN)</th>
+                <th rowspan="2" class="text-center bg-dark text-white align-middle no-print">Aksi</th>
               </tr>
               <tr style="font-size: 0.78rem;">
                 <th class="trx-keluar-header">Tanggal</th>
                 <th class="trx-keluar-header">Petugas Serah</th>
                 <th class="trx-keluar-header">Penerima</th>
                 <th class="trx-keluar-header">No. BA / Jenis</th>
-                <th class="trx-keluar-header text-center">Foto Kegiatan</th>
+                <th class="trx-keluar-header text-center no-print">Foto Kegiatan</th>
                 <th class="trx-keluar-header">Lokasi Pinjam</th>
                 <th class="trx-masuk-header">Tanggal</th>
                 <th class="trx-masuk-header">Petugas Terima</th>
                 <th class="trx-masuk-header">Petugas Serah</th>
                 <th class="trx-masuk-header">No. BA / Jenis</th>
-                <th class="trx-masuk-header text-center">Foto Kegiatan</th>
+                <th class="trx-masuk-header text-center no-print">Foto Kegiatan</th>
                 <th class="trx-masuk-header">Lokasi Kembali</th>
               </tr>
             </thead>
@@ -733,5 +861,156 @@
 
       </div>
     `;
+  }
+
+  function openAddModal(itemId) {
+    const item = globalData.find(i => i.id === itemId);
+    if (!item) return;
+
+    removeStrayBackdrops();
+
+    const alertBox = document.getElementById('formAlertBox');
+    if (alertBox) alertBox.style.display = 'none';
+
+    document.getElementById('modalTrxTitle').innerHTML = '<i class="bi bi-plus-circle me-2"></i> Tambah Transaksi Riwayat Baru';
+    document.getElementById('trxForm').reset();
+    document.getElementById('formRowIndex').value = '';
+    document.getElementById('formMasterRowIndex').value = item.masterRowIndex || '';
+    document.getElementById('formItemNup').value = item.nup || '';
+    document.getElementById('formItemNopol').value = item.nopol || '';
+
+    const modal = getModalInstance();
+    if (modal) {
+      modal.show();
+    } else {
+      const modalEl = document.getElementById('modalTrxForm');
+      if (modalEl) {
+        modalEl.classList.add('show');
+        modalEl.style.display = 'block';
+      }
+    }
+  }
+
+  function openEditModal(itemId, rowIndex) {
+    const item = globalData.find(i => i.id === itemId);
+    if (!item) return;
+    const historyItem = item.history.find(h => h.rowIndex === rowIndex);
+    if (!historyItem) return;
+
+    removeStrayBackdrops();
+
+    const alertBox = document.getElementById('formAlertBox');
+    if (alertBox) alertBox.style.display = 'none';
+
+    document.getElementById('modalTrxTitle').innerHTML = '<i class="bi bi-pencil-square me-2"></i> Edit Transaksi Riwayat';
+    document.getElementById('formRowIndex').value = rowIndex;
+    document.getElementById('formMasterRowIndex').value = item.masterRowIndex || '';
+    document.getElementById('formItemNup').value = item.nup || '';
+    document.getElementById('formItemNopol').value = item.nopol || '';
+
+    document.getElementById('formKeluarTgl').value = formatDateForInput(historyItem.keluarTgl);
+    document.getElementById('formKeluarPetugasSerah').value = historyItem.keluarPetugasSerah || '';
+    document.getElementById('formKeluarPetugasTerima').value = historyItem.keluarPetugasTerima || '';
+    document.getElementById('formKeluarBA').value = historyItem.keluarBA || '';
+    document.getElementById('formKeluarFoto').value = historyItem.keluarFoto || '';
+    document.getElementById('formKeluarLokasi').value = historyItem.keluarLokasi || '';
+
+    document.getElementById('formMasukTgl').value = formatDateForInput(historyItem.masukTgl);
+    document.getElementById('formMasukPetugasTerima').value = historyItem.masukPetugasTerima || '';
+    document.getElementById('formMasukPetugasSerah').value = historyItem.masukPetugasSerah || '';
+    document.getElementById('formMasukBA').value = historyItem.masukBA || '';
+    document.getElementById('formMasukFoto').value = historyItem.masukFoto || '';
+    document.getElementById('formMasukLokasi').value = historyItem.masukLokasi || '';
+
+    const modal = getModalInstance();
+    if (modal) {
+      modal.show();
+    } else {
+      const modalEl = document.getElementById('modalTrxForm');
+      if (modalEl) {
+        modalEl.classList.add('show');
+        modalEl.style.display = 'block';
+      }
+    }
+  }
+
+  async function submitTrxForm() {
+    const btnSubmit = document.getElementById('btnSubmitForm');
+    const alertBox = document.getElementById('formAlertBox');
+    alertBox.style.display = 'none';
+
+    const payload = {
+      action: 'saveTransaksi',
+      rowIndex: document.getElementById('formRowIndex').value,
+      masterRowIndex: document.getElementById('formMasterRowIndex').value,
+      nup: document.getElementById('formItemNup').value,
+      nopol: document.getElementById('formItemNopol').value,
+      keluarTgl: document.getElementById('formKeluarTgl').value,
+      keluarPetugasSerah: document.getElementById('formKeluarPetugasSerah').value,
+      keluarPetugasTerima: document.getElementById('formKeluarPetugasTerima').value,
+      keluarBA: document.getElementById('formKeluarBA').value,
+      keluarFoto: document.getElementById('formKeluarFoto').value,
+      keluarLokasi: document.getElementById('formKeluarLokasi').value,
+      masukTgl: document.getElementById('formMasukTgl').value,
+      masukPetugasTerima: document.getElementById('formMasukPetugasTerima').value,
+      masukPetugasSerah: document.getElementById('formMasukPetugasSerah').value,
+      masukBA: document.getElementById('formMasukBA').value,
+      masukFoto: document.getElementById('formMasukFoto').value,
+      masukLokasi: document.getElementById('formMasukLokasi').value
+    };
+
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
+
+    try {
+      const response = await fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      const res = await response.json();
+      if (!res.success) throw new Error(res.error || 'Gagal menyimpan transaksi.');
+
+      closeModalDirectly();
+      showToastNotice('<i class="bi bi-check-circle me-1"></i> Transaksi berhasil disimpan!');
+      await fetchDatabaseData(true);
+
+    } catch (err) {
+      alertBox.style.display = 'block';
+      alertBox.innerHTML = `<strong>Error:</strong> ${err.message || err}`;
+    } finally {
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = '<i class="bi bi-save me-1"></i> Simpan Transaksi';
+    }
+  }
+
+  async function deleteTransaksiConfirm(rowIndex) {
+    if (!confirm('Apakah Anda yakin ingin menghapus baris transaksi riwayat ini?')) return;
+
+    updateSyncBadge('bg-warning text-dark', '<i class="bi bi-trash me-1"></i> Menghapus Transaksi...');
+
+    try {
+      const payload = {
+        action: 'deleteTransaksi',
+        rowIndex: rowIndex
+      };
+
+      const response = await fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      const res = await response.json();
+      if (!res.success) throw new Error(res.error || 'Gagal menghapus transaksi.');
+
+      showToastNotice('<i class="bi bi-check-circle me-1"></i> Transaksi berhasil dihapus!');
+      await fetchDatabaseData(true);
+
+    } catch (err) {
+      alert('Gagal menghapus transaksi: ' + (err.message || err));
+      updateSyncBadge('bg-danger', '<i class="bi bi-x-circle me-1"></i> Gagal Hapus');
+    }
   }
 </script>
