@@ -1,1016 +1,154 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Dalam Perbaikan</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
 
-<style>
-  html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    overflow: hidden !important;
-    background-color: #f8fafc !important;
-  }
-
-  #header, #footer, .header-outer, .footer-outer, .sidebar-container, .sidebar, aside,
-  .post-header, .post-footer, .post-title, .entry-title, .comments,
-  #blog-pager, .blog-pager, .breadcrumbs, .widget-title, .feed-links,
-  .Header, .BlogArchive, .Profile, .Attribution, .navbar, #b-navbar, #navbar-iframe {
-    display: none !important;
-  }
-
-  :root {
-    --primary-color: #1e3a8a;
-    --secondary-color: #0d9488;
-    --bg-light: #f8fafc;
-  }
-
-  #silapAppContainer {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 2147483640 !important;
-    overflow-y: auto !important;
-    background-color: var(--bg-light) !important;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #334155;
-    padding: 20px 0;
-    box-sizing: border-box !important;
-  }
-
-  .nav-pills .nav-link {
-    border-radius: 8px;
-    font-weight: 600;
-    color: #64748b;
-    padding: 10px 20px;
-  }
-
-  .nav-pills .nav-link.active {
-    background-color: var(--primary-color);
-    color: white;
-  }
-
-  .table-custom {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-
-  .table-custom th {
-    background-color: #0f172a;
-    color: white;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    vertical-align: middle;
-  }
-
-  .badge-kondisi {
-    font-size: 0.75rem;
-    padding: 5px 10px;
-    border-radius: 20px;
-  }
-
-  .img-thumb {
-    width: 55px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-  }
-
-  .detail-card {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    margin-bottom: 24px;
-  }
-
-  .img-preview-lg {
-    width: 100%;
-    max-height: 250px;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid #cbd5e1;
-  }
-
-  .trx-keluar-header { background-color: #fff7ed; color: #9a3412; font-weight: bold; }
-  .trx-masuk-header { background-color: #f0fdf4; color: #166534; font-weight: bold; }
-
-  .modal {
-    z-index: 2147483647 !important;
-    background: rgba(15, 23, 42, 0.75) !important;
-    backdrop-filter: blur(3px);
-  }
-
-  .modal-backdrop {
-    display: none !important;
-  }
-
-  .modal-dialog {
-    z-index: 2147483648 !important;
-    margin-top: 50px;
-  }
-
-  .modal-content {
-    background-color: #ffffff !important;
-    color: #1e293b !important;
-    border-radius: 12px !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
-    overflow: hidden;
-  }
-
-  .modal .form-control, .modal .form-select {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    cursor: text !important;
-    font-size: 0.875rem !important;
-  }
-
-  .modal .form-control:focus, .modal .form-select:focus {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-    border-color: #2563eb !important;
-    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25) !important;
-  }
-
-  .spin-anim {
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin { 100% { transform: rotate(360deg); } }
-
-  .print-header { display: none; }
-
-  @page {
-    size: A4 landscape;
-    margin: 10mm 8mm 10mm 8mm;
-  }
-
-  @media print {
-    html, body {
-      margin: 0 !important;
-      padding: 0 !important;
-      width: 100% !important;
-      height: auto !important;
-      min-height: auto !important;
-      overflow: visible !important;
-      background: #ffffff !important;
-      color: #000000 !important;
-    }
-
-    #silapAppContainer {
-      position: static !important;
-      top: auto !important;
-      left: auto !important;
-      right: auto !important;
-      bottom: auto !important;
-      width: 100% !important;
-      height: auto !important;
-      overflow: visible !important;
-      background: #ffffff !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-
-    .no-print, 
-    .btn, 
-    .input-group, 
-    select, 
-    input, 
-    #syncStatusBadge, 
-    #loadingSpinner, 
-    .nav, 
-    .nav-pills, 
-    .modal, 
-    .modal-backdrop,
-    .btn-group { 
-      display: none !important; 
-    }
-
-    .print-header {
-      display: block !important;
-      text-align: center;
-      margin-bottom: 12px;
-      border-bottom: 2px solid #000;
-      padding-bottom: 6px;
-    }
-
-    .print-header h5 {
-      margin: 0;
-      font-weight: bold;
-      font-size: 13pt;
-      color: #000;
-      text-transform: uppercase;
-    }
-
-    .print-header p {
-      margin: 3px 0 0 0;
-      font-size: 8.5pt;
-      color: #222;
-    }
-
-    .detail-card, .card {
-      box-shadow: none !important;
-      border: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      background: transparent !important;
-    }
-
-    .table-responsive, .table-custom {
-      overflow: visible !important;
-      box-shadow: none !important;
-      border: none !important;
-      border-radius: 0 !important;
-    }
-
-    table {
-      width: 100% !important;
-      border-collapse: collapse !important;
-      font-size: 8pt !important;
-      page-break-inside: auto !important;
-    }
-
-    thead {
-      display: table-header-group !important;
-    }
-
-    tbody {
-      display: table-row-group !important;
-    }
-
-    tr {
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
-    }
-
-    th, td {
-      border: 1px solid #000000 !important;
-      padding: 4px 6px !important;
-      color: #000000 !important;
-      vertical-align: middle !important;
-    }
-
-    th {
-      background-color: #f1f5f9 !important;
-      color: #000000 !important;
-      font-weight: bold !important;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-
-    .badge {
-      border: none !important;
-      color: #000000 !important;
-      padding: 0 !important;
-      font-size: 8pt !important;
-      background: transparent !important;
-    }
-
-    .img-thumb {
-      width: 42px !important;
-      height: 30px !important;
-    }
-
-    .img-preview-lg {
-      max-height: 110px !important;
-      width: auto !important;
-    }
-  }
-</style>
-
-<div id="silapAppContainer">
-  <div class="container-fluid px-4">
-
-    <!-- Kop Cetak Resmi -->
-    <div class="print-header">
-      <h5>LAPORAN MONITORING & RIWAYAT KENDARAAN DINAS FUNGSIONAL (SILAP-KDF)</h5>
-      <p>Sistem Informasi Pengelolaan Aset BMN Tanggap Darurat</p>
-    </div>
-
-    <!-- Header App Bar -->
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom no-print">
-      <div class="d-flex align-items-center gap-2">
-        <i class="bi bi-truck fs-3 text-primary"></i>
-        <div>
-          <h4 class="fw-bold mb-0">SILAP-KDF BMN TD <small class="fs-6 text-muted fw-normal">| Monitoring Aset & CRUD Riwayat</small></h4>
-          <span id="syncStatusBadge" class="badge bg-secondary">Memeriksa Cache...</span>
-        </div>
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="fetchDatabaseData(true)">
-        <i class="bi bi-arrow-clockwise me-1" id="refreshIcon"></i> Refresh Data
-      </button>
-    </div>
-
-    <!-- Loading Spinner & Error Retry Box -->
-    <div id="loadingSpinner" class="text-center py-5">
-      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
-      <p id="loadingText" class="mt-3 text-muted fw-semibold">Memuat Data dari Web API Apps Script...</p>
-
-      <div id="errorRetryBox" style="display: none;" class="mt-4 mx-auto text-start" style="max-width: 650px;">
-        <div class="alert alert-danger shadow-sm border-0 p-4">
-          <h5 class="fw-bold text-danger mb-2"><i class="bi bi-exclamation-octagon-fill me-2"></i>Koneksi Backend Gagal</h5>
-          <hr>
-          <div id="errorMessage" class="mb-3 small"></div>
-          <div class="d-flex gap-2 flex-wrap">
-            <button class="btn btn-primary btn-sm" onclick="fetchDatabaseData(true)">
-              <i class="bi bi-arrow-repeat me-1"></i> Coba Lagi
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div id="mainContent" style="display: none;">
-
-      <!-- Nav Tabs -->
-      <ul class="nav nav-pills mb-4 no-print" id="pills-tab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="tab-rekap-tab" data-bs-toggle="pill" data-bs-target="#tab-rekap" type="button" role="tab">
-            <i class="bi bi-table me-2"></i>Laporan Rekap Keseluruhan
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tab-detail-tab" data-bs-toggle="pill" data-bs-target="#tab-detail" type="button" role="tab">
-            <i class="bi bi-journal-text me-2"></i>Laporan Per Barang / Mobil
-          </button>
-        </li>
-      </ul>
-
-      <div class="tab-content" id="pills-tabContent">
-
-        <!-- TAB 1: REKAP KESELURUHAN -->
-        <div class="tab-pane fade show active" id="tab-rekap" role="tabpanel">
-          <div class="card border-0 shadow-sm p-3 mb-3 no-print">
-            <div class="row g-2">
-              <div class="col-md-6">
-                <div class="input-group">
-                  <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                  <input type="text" id="searchInput" class="form-control" placeholder="Cari Nopol, Nama Barang, NUP, Merk..." onkeyup="filterRekapTable()">
-                </div>
-              </div>
-              <div class="col-md-3">
-                <select id="filterKondisi" class="form-select" onchange="filterRekapTable()">
-                  <option value="">-- Semua Kondisi --</option>
-                  <option value="Baik">Baik</option>
-                  <option value="Rusak Ringan">Rusak Ringan (RR)</option>
-                  <option value="Rusak Berat">Rusak Berat (RB)</option>
-                </select>
-              </div>
-              <div class="col-md-3 text-end">
-                <button class="btn btn-success w-100" onclick="window.print()">
-                  <i class="bi bi-printer me-1"></i> Cetak Laporan
-                </button>
-              </div>
+    <!-- Header / Navbar -->
+    <header class="w-full border-b border-slate-800 bg-slate-900/50 backdrop-blur-md fixed top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-3 h-3 bg-amber-500 rounded-full animate-ping"></div>
+                <span class="font-bold tracking-wider text-lg uppercase bg-gradient-to-r from-amber-400 to-indigo-400 bg-clip-text text-transparent">Status Sistem</span>
             </div>
-          </div>
-
-          <div class="table-responsive table-custom">
-            <table class="table table-hover align-middle mb-0" id="rekapTable">
-              <thead>
-                <tr>
-                  <th class="text-center">No</th>
-                  <th>Foto</th>
-                  <th>Nama Barang / Kendaraan</th>
-                  <th>NUP / Nopol</th>
-                  <th>Merk / Tipe</th>
-                  <th>Kondisi</th>
-                  <th>Nilai Perolehan</th>
-                  <th class="text-center">Jml Transaksi</th>
-                  <th class="text-center no-print">Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="rekapTableBody">
-                <!-- Dynamic Rows -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- TAB 2: DETAIL PER BARANG -->
-        <div class="tab-pane fade" id="tab-detail" role="tabpanel">
-          <div class="card border-0 shadow-sm p-3 mb-4 no-print">
-            <label class="form-label fw-bold text-dark"><i class="bi bi-funnel me-1"></i> Pilih Barang / Kendaraan:</label>
-            <select id="selectBarang" class="form-select form-select-lg" onchange="renderDetailBarang(this.value)">
-              <!-- Dynamic Options -->
-            </select>
-          </div>
-
-          <div id="detailContainer">
-            <!-- Dynamic Content -->
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- Modal Form Transaksi -->
-    <div class="modal fade" id="modalTrxForm" tabindex="-1" aria-hidden="true" data-bs-backdrop="false">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title fw-bold" id="modalTrxTitle"><i class="bi bi-pencil-square me-2"></i> Form Transaksi Riwayat</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="closeModalDirectly()" aria-label="Close"></button>
-          </div>
-          <div class="modal-body p-4">
-            <div id="formAlertBox" class="alert alert-danger py-2 px-3 small mb-3" style="display: none;"></div>
-
-            <form id="trxForm" onsubmit="return false;">
-              <input type="hidden" id="formRowIndex" value="">
-              <input type="hidden" id="formMasterRowIndex" value="">
-              <input type="hidden" id="formItemNup" value="">
-              <input type="hidden" id="formItemNopol" value="">
-
-              <!-- SEKSI KELUAR -->
-              <div class="p-3 bg-light rounded border mb-3">
-                <h6 class="fw-bold text-danger mb-3"><i class="bi bi-box-arrow-up-right me-1"></i> DATA BARANG KELUAR (PEMINJAMAN)</h6>
-                <div class="row g-3">
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Tanggal Keluar</label>
-                    <input type="date" id="formKeluarTgl" class="form-control">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Petugas Serah</label>
-                    <input type="text" id="formKeluarPetugasSerah" class="form-control" placeholder="Petugas Penyerah">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Petugas Terima (Peminjam)</label>
-                    <input type="text" id="formKeluarPetugasTerima" class="form-control" placeholder="Penerima / Peminjam">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">No. BA / Jenis</label>
-                    <input type="text" id="formKeluarBA" class="form-control" placeholder="No Berita Acara">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">URL Foto Kegiatan</label>
-                    <input type="text" id="formKeluarFoto" class="form-control" placeholder="URL Google Drive / Image">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Lokasi Pinjam</label>
-                    <input type="text" id="formKeluarLokasi" class="form-control" placeholder="Lokasi Tujuan">
-                  </div>
-                </div>
-              </div>
-
-              <!-- SEKSI MASUK -->
-              <div class="p-3 bg-light rounded border">
-                <h6 class="fw-bold text-success mb-3"><i class="bi bi-box-arrow-in-down-left me-1"></i> DATA BARANG MASUK (PENGEMBALIAN)</h6>
-                <div class="row g-3">
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Tanggal Masuk</label>
-                    <input type="date" id="formMasukTgl" class="form-control">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Petugas Terima</label>
-                    <input type="text" id="formMasukPetugasTerima" class="form-control" placeholder="Petugas Penerima">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Petugas Serah</label>
-                    <input type="text" id="formMasukPetugasSerah" class="form-control" placeholder="Pengembali">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">No. BA / Jenis</label>
-                    <input type="text" id="formMasukBA" class="form-control" placeholder="No Berita Acara">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">URL Foto Kegiatan</label>
-                    <input type="text" id="formMasukFoto" class="form-control" placeholder="URL Google Drive / Image">
-                  </div>
-                  <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Lokasi Kembali</label>
-                    <input type="text" id="formMasukLokasi" class="form-control" placeholder="Lokasi Penyerahan">
-                  </div>
-                </div>
-              </div>
-
-            </form>
-          </div>
-          <div class="modal-footer bg-light">
-            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" onclick="closeModalDirectly()">Batal</button>
-            <button type="button" class="btn btn-primary btn-sm" onclick="submitTrxForm()" id="btnSubmitForm">
-              <i class="bi bi-save me-1"></i> Simpan Transaksi
+            <button onclick="checkSystemStatus()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-rotate"></i>
+                <span>Cek Status</span>
             </button>
-          </div>
         </div>
-      </div>
-    </div>
+    </header>
 
-  </div>
-</div>
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center px-6 pt-24 pb-12">
+        <div class="max-w-2xl w-full text-center space-y-8">
+            <!-- Icon Illustration -->
+            <div class="relative w-28 h-28 mx-auto flex items-center justify-center bg-indigo-500/10 border border-indigo-500/20 rounded-3xl shadow-2xl shadow-indigo-500/10">
+                <i class="fa-solid fa-gears text-5xl text-indigo-400 animate-spin" style="animation-duration: 8s;"></i>
+                <div class="absolute -bottom-2 -right-2 bg-amber-500 text-slate-950 text-xs font-bold px-2.5 py-1 rounded-full border border-slate-900">
+                    MAINTENANCE
+                </div>
+            </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Heading & Description -->
+            <div class="space-y-3">
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Sedang Melakukan Pemeliharaan</h1>
+                <p class="text-slate-400 text-sm md:text-base max-w-lg mx-auto">
+                    Kami sedang meningkatkan performa dan infrastruktur layanan untuk memberikan pengalaman yang lebih baik. Mohon bersabar, sistem akan segera kembali normal.
+                </p>
+            </div>
 
-<script>
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcG9HMIl1MOwJ-ysqQ9xTWQGm1sxs44zVTuTo3rkRwTxanAPsCdQtKwvH-_AXXRkq_Qg/exec";
-  const CACHE_KEY = "SILAP_FRONTEND_CACHE_DATA";
+            <!-- Status Indicator Card -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 text-left shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <span class="text-sm font-medium text-slate-300">Estimasi Pemulihan</span>
+                    <span id="eta-text" class="text-sm font-semibold text-indigo-400">Segera Selesai</span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span>Progres Pembaruan</span>
+                    <span id="status-text">Sinkronisasi Database...</span>
+                </div>
+                <!-- Loading Spinner Container -->
+                <div id="loading-container" class="hidden flex items-center justify-center py-2 space-x-2 text-indigo-400 text-xs">
+                    <i class="fa-solid fa-circle-notch animate-spin"></i>
+                    <span>Menghubungkan ke Server Google Apps Script...</span>
+                </div>
+            </div>
 
-  let globalData = [];
+            <!-- Subscription or Notification Form -->
+            <div class="bg-slate-900/40 border border-slate-800/60 rounded-2xl p-6 space-y-4">
+                <h3 class="text-sm font-semibold text-slate-200">Dapatkan Notifikasi Saat Sistem Pulih</h3>
+                <form id="subscribe-form" onsubmit="handleSubscribe(event)" class="flex flex-col sm:flex-row gap-2">
+                    <input type="email" id="subscriber-email" required placeholder="Masukkan email Anda..." class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition">
+                    <button type="submit" id="submit-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-2.5 rounded-xl text-sm transition flex items-center justify-center space-x-2">
+                        <span>Beritahu Saya</span>
+                    </button>
+                </form>
+                <div id="form-feedback" class="text-xs text-center hidden"></div>
+            </div>
+        </div>
+    </main>
 
-  function showToastNotice(message, isError = false) {
-    const syncBadge = document.getElementById('syncStatusBadge');
-    if (syncBadge) {
-      syncBadge.className = isError ? 'badge bg-danger text-white' : 'badge bg-success text-white';
-      syncBadge.innerHTML = message;
-      setTimeout(() => {
-        syncBadge.className = 'badge bg-success';
-        syncBadge.innerHTML = '<i class="bi bi-cloud-check me-1"></i> Data Terkini';
-      }, 4000);
-    }
-  }
+    <!-- Footer -->
+    <footer class="w-full border-t border-slate-900 py-6 text-center text-xs text-slate-500">
+        &copy; <span id="current-year"></span> Sistem Terintegrasi Google Apps Script & Blogger. All rights reserved.
+    </footer>
 
-  function formatDateForInput(dateStr) {
-    if (!dateStr || dateStr === '-') return '';
-    const d = new Date(dateStr);
-    if (!isNaN(d.getTime())) {
-      return d.toISOString().split('T')[0];
-    }
-    return dateStr;
-  }
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Set current year automatically
+        document.getElementById('current-year').textContent = new Date().getFullYear();
 
-  function getModalInstance() {
-    const modalEl = document.getElementById('modalTrxForm');
-    if (!modalEl) return null;
-    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-      return bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-    }
-    return null;
-  }
+        // Ganti dengan URL Web App Google Apps Script Anda setelah di-deploy
+        const GAS_API_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
-  function removeStrayBackdrops() {
-    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-  }
+        async function checkSystemStatus() {
+            const loadingEl = document.getElementById('loading-container');
+            const statusTextEl = document.getElementById('status-text');
+            
+            loadingEl.classList.remove('hidden');
+            statusTextEl.textContent = "Memeriksa koneksi server...";
 
-  function closeModalDirectly() {
-    const modalInstance = getModalInstance();
-    if (modalInstance) {
-      modalInstance.hide();
-    }
-    const modalEl = document.getElementById('modalTrxForm');
-    if (modalEl) {
-      modalEl.classList.remove('show');
-      modalEl.style.display = 'none';
-    }
-    removeStrayBackdrops();
-  }
-
-  document.addEventListener("DOMContentLoaded", function() {
-    const appEl = document.getElementById('silapAppContainer');
-    if (appEl && appEl.parentElement !== document.body) {
-      document.body.appendChild(appEl);
-    }
-    
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-
-    const cachedData = localStorage.getItem(CACHE_KEY);
-    if (cachedData) {
-      try {
-        const parsed = JSON.parse(cachedData);
-        if (parsed && parsed.length > 0) {
-          globalData = parsed;
-          renderRekapTable(globalData);
-          renderBarangSelector(globalData);
-          
-          document.getElementById('loadingSpinner').style.display = 'none';
-          document.getElementById('mainContent').style.display = 'block';
-          updateSyncBadge('bg-info text-dark', '<i class="bi bi-check-circle me-1"></i> Menggunakan Cache');
+            try {
+                // Simulasi atau Fetch nyata ke GAS Backend
+                if (GAS_API_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    statusTextEl.textContent = "Sistem dalam mode pemeliharaan terjadwal.";
+                } else {
+                    const response = await fetch(GAS_API_URL, {
+                        method: 'GET',
+                        mode: 'cors'
+                    });
+                    const result = await response.json();
+                    statusTextEl.textContent = result.message || "Sistem terpantau aktif.";
+                }
+            } catch (error) {
+                console.error("Gagal terhubung:", error);
+                statusTextEl.textContent = "Koneksi backend belum dikonfigurasi.";
+            } finally {
+                loadingEl.classList.add('hidden');
+            }
         }
-      } catch (e) {
-        console.warn("Gagal membaca cache lokal", e);
-      }
-    }
 
-    fetchDatabaseData(false);
-  });
+        async function handleSubscribe(event) {
+            event.preventDefault();
+            const emailInput = document.getElementById('subscriber-email');
+            const submitBtn = document.getElementById('submit-btn');
+            const feedbackEl = document.getElementById('form-feedback');
+            const email = emailInput.value;
 
-  async function fetchDatabaseData(forceRefresh = false) {
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const mainContent = document.getElementById('mainContent');
-    const errorRetryBox = document.getElementById('errorRetryBox');
-    const refreshIcon = document.getElementById('refreshIcon');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i><span>Memproses...</span>';
 
-    if (refreshIcon) refreshIcon.classList.add('spin-anim');
-    updateSyncBadge('bg-warning text-dark', '<i class="bi bi-arrow-repeat me-1"></i> Memperbarui Data...');
+            try {
+                if (GAS_API_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+                    await new Promise(resolve => setTimeout(resolve, 1200));
+                } else {
+                    await fetch(GAS_API_URL, {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'subscribe', email: email })
+                    });
+                }
 
-    if (globalData.length === 0) {
-      loadingSpinner.style.display = 'block';
-      mainContent.style.display = 'none';
-      errorRetryBox.style.display = 'none';
-    }
-
-    try {
-      const timestamp = new Date().getTime();
-      const url = forceRefresh 
-        ? `${GAS_WEB_APP_URL}?action=getDatabaseData&nocache=1&_t=${timestamp}` 
-        : `${GAS_WEB_APP_URL}?action=getDatabaseData&_t=${timestamp}`;
-      
-      const response = await fetch(url, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-
-      const res = await response.json();
-      if (!res.success) throw new Error(res.error || 'Terjadi kesalahan backend.');
-
-      globalData = res.items || [];
-      localStorage.setItem(CACHE_KEY, JSON.stringify(globalData));
-
-      renderRekapTable(globalData);
-      renderBarangSelector(globalData);
-
-      loadingSpinner.style.display = 'none';
-      mainContent.style.display = 'block';
-      updateSyncBadge('bg-success', '<i class="bi bi-cloud-check me-1"></i> Data Terkini');
-
-    } catch (err) {
-      console.error("Fetch Error:", err);
-      if (globalData.length > 0) {
-        updateSyncBadge('bg-secondary', '<i class="bi bi-wifi-off me-1"></i> Mode Offline');
-      } else {
-        loadingSpinner.style.display = 'block';
-        mainContent.style.display = 'none';
-        errorRetryBox.style.display = 'block';
-        document.getElementById('errorMessage').innerHTML = `<code>${err.message || err}</code>`;
-        updateSyncBadge('bg-danger', '<i class="bi bi-x-circle me-1"></i> Gagal Sinkron');
-      }
-    } finally {
-      if (refreshIcon) refreshIcon.classList.remove('spin-anim');
-    }
-  }
-
-  function updateSyncBadge(bgClass, htmlContent) {
-    const badge = document.getElementById('syncStatusBadge');
-    if (badge) {
-      badge.className = `badge ${bgClass}`;
-      badge.innerHTML = htmlContent;
-    }
-  }
-
-  function renderRekapTable(items) {
-    const tbody = document.getElementById('rekapTableBody');
-    tbody.innerHTML = '';
-
-    if (!items || items.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">Tidak ada data ditemukan.</td></tr>';
-      return;
-    }
-
-    items.forEach((item, index) => {
-      const fotoHtml = item.foto 
-        ? `<img src="${item.foto}" class="img-thumb" alt="Foto">`
-        : `<span class="badge bg-secondary">No Image</span>`;
-
-      let badgeKondisi = 'bg-success';
-      const kondisiLower = (item.kondisi || '').toLowerCase();
-      if (kondisiLower.includes('rr') || kondisiLower.includes('rusak ringan')) badgeKondisi = 'bg-warning text-dark';
-      if (kondisiLower.includes('rb') || kondisiLower.includes('rusak berat')) badgeKondisi = 'bg-danger';
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="text-center fw-bold">${index + 1}</td>
-        <td class="text-center">${fotoHtml}</td>
-        <td>
-          <div class="fw-bold text-primary">${item.namaBarang}</div>
-          <small class="text-muted">Kode: ${item.kodeBarang}</small>
-        </td>
-        <td>
-          <div class="fw-semibold">${item.nopol}</div>
-          <small class="text-muted">NUP: ${item.nup}</small>
-        </td>
-        <td>${item.merk} / ${item.tipe} (${item.tahun})</td>
-        <td><span class="badge badge-kondisi ${badgeKondisi}">${item.kondisi}</span></td>
-        <td>${item.nilaiPerolehanFormatted}</td>
-        <td class="text-center"><span class="badge bg-info text-dark fw-bold">${(item.history || []).length} Trx</span></td>
-        <td class="text-center no-print">
-          <button class="btn btn-sm btn-outline-primary" onclick="viewDetail('${item.id}')">
-            <i class="bi bi-eye"></i> Detail
-          </button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function renderBarangSelector(items) {
-    const select = document.getElementById('selectBarang');
-    const prevValue = select.value;
-    select.innerHTML = '';
-
-    items.forEach(item => {
-      const opt = document.createElement('option');
-      opt.value = item.id;
-      opt.textContent = `${item.namaBarang} - ${item.nopol} (NUP: ${item.nup})`;
-      select.appendChild(opt);
-    });
-
-    if (items.length > 0) {
-      const activeId = items.some(i => i.id === prevValue) ? prevValue : items[0].id;
-      select.value = activeId;
-      renderDetailBarang(activeId);
-    }
-  }
-
-  function filterRekapTable() {
-    const searchVal = document.getElementById('searchInput').value.toLowerCase();
-    const kondisiVal = document.getElementById('filterKondisi').value.toLowerCase();
-
-    const filtered = globalData.filter(item => {
-      const matchesSearch = (item.namaBarang || '').toLowerCase().includes(searchVal) ||
-                            (item.nopol || '').toLowerCase().includes(searchVal) ||
-                            (item.nup || '').toLowerCase().includes(searchVal) ||
-                            (item.merk || '').toLowerCase().includes(searchVal);
-
-      const matchesKondisi = kondisiVal === '' || (item.kondisi || '').toLowerCase().includes(kondisiVal);
-
-      return matchesSearch && matchesKondisi;
-    });
-
-    renderRekapTable(filtered);
-  }
-
-  function viewDetail(itemId) {
-    document.getElementById('selectBarang').value = itemId;
-    renderDetailBarang(itemId);
-
-    const detailTab = new bootstrap.Tab(document.getElementById('tab-detail-tab'));
-    detailTab.show();
-  }
-
-  function renderDetailBarang(itemId) {
-    const item = globalData.find(i => i.id === itemId);
-    const container = document.getElementById('detailContainer');
-
-    if (!item) {
-      container.innerHTML = '<div class="alert alert-warning">Data barang tidak ditemukan.</div>';
-      return;
-    }
-
-    let historyRows = '';
-    if (!item.history || item.history.length === 0) {
-      historyRows = '<tr><td colspan="14" class="text-center py-4 text-muted">Belum ada riwayat peminjaman / pengembalian.</td></tr>';
-    } else {
-      item.history.forEach((h) => {
-        const imgKeluar = h.keluarFoto ? `<a href="${h.keluarFoto}" target="_blank" class="btn btn-xs btn-outline-secondary"><i class="bi bi-image"></i> Lihat</a>` : '-';
-        const imgMasuk = h.masukFoto ? `<a href="${h.masukFoto}" target="_blank" class="btn btn-xs btn-outline-secondary"><i class="bi bi-image"></i> Lihat</a>` : '-';
-
-        historyRows += `
-          <tr>
-            <td class="text-center fw-bold">${h.trxNo}</td>
-            <td class="fw-semibold text-nowrap">${h.keluarTgl}</td>
-            <td>${h.keluarPetugasSerah}</td>
-            <td>${h.keluarPetugasTerima}</td>
-            <td>${h.keluarBA}</td>
-            <td class="text-center no-print">${imgKeluar}</td>
-            <td>${h.keluarLokasi}</td>
-            <td class="fw-semibold text-nowrap">${h.masukTgl}</td>
-            <td>${h.masukPetugasTerima}</td>
-            <td>${h.masukPetugasSerah}</td>
-            <td>${h.masukBA}</td>
-            <td class="text-center no-print">${imgMasuk}</td>
-            <td>${h.masukLokasi}</td>
-            <td class="text-center no-print">
-              <div class="btn-group btn-group-sm">
-                <button type="button" class="btn btn-outline-primary" title="Edit Transaksi" onclick="openEditModal('${item.id}', ${h.rowIndex})">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button type="button" class="btn btn-outline-danger" title="Hapus Transaksi" onclick="deleteTransaksiConfirm(${h.rowIndex})">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    container.innerHTML = `
-      <div class="detail-card">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="fw-bold text-primary mb-0"><i class="bi bi-truck me-2"></i> Laporan Peminjaman Kendaraan Dinas Fungsional - TANGGAP DARURAT</h4>
-          <div class="no-print">
-            <button type="button" class="btn btn-success btn-sm me-2" onclick="openAddModal('${item.id}')">
-              <i class="bi bi-plus-circle me-1"></i> Tambah Transaksi Riwayat
-            </button>
-            <button type="button" class="btn btn-outline-dark btn-sm" onclick="window.print()">
-              <i class="bi bi-printer me-1"></i> Cetak Kartu Kendaraan
-            </button>
-          </div>
-        </div>
-
-        <div class="row g-4 mb-4">
-          <div class="col-md-4 text-center">
-            ${item.foto 
-              ? `<img src="${item.foto}" class="img-preview-lg mb-2" alt="Foto Unit">` 
-              : `<div class="p-5 bg-light rounded text-muted"><i class="bi bi-image fs-1"></i><br>Foto Tidak Tersedia</div>`}
-            <div class="mt-2 fw-bold text-dark fs-5">${item.nopol}</div>
-          </div>
-          <div class="col-md-8">
-            <table class="table table-sm table-borderless fs-6">
-              <tbody>
-                <tr><td width="30%" class="text-muted">Nama Barang</td><td width="5%">:</td><td class="fw-bold text-dark">${item.namaBarang}</td></tr>
-                <tr><td class="text-muted">Kode Satker</td><td>:</td><td>${item.kodeSatker}</td></tr>
-                <tr><td class="text-muted">Kode Barang / NUP</td><td>:</td><td>${item.kodeBarang} / <span class="badge bg-dark">${item.nup}</span></td></tr>
-                <tr><td class="text-muted">Merk / Tipe</td><td>:</td><td>${item.merk} / ${item.tipe}</td></tr>
-                <tr><td class="text-muted">Tahun / Jenis BMN</td><td>:</td><td>${item.tahun} / ${item.jenisBmn}</td></tr>
-                <tr><td class="text-muted">Kondisi Barang</td><td>:</td><td><span class="badge bg-info text-dark">${item.kondisi}</span></td></tr>
-                <tr><td class="text-muted">Nilai Perolehan</td><td>:</td><td class="fw-bold text-success fs-5">${item.nilaiPerolehanFormatted}</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <h5 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-clock-history me-2"></i> Riwayat Barang Keluar & Barang Masuk</h5>
-
-        <div class="table-responsive">
-          <table class="table align-middle text-sm" style="font-size: 0.85rem;">
-            <thead>
-              <tr>
-                <th rowspan="2" class="text-center bg-dark text-white align-middle">No</th>
-                <th colspan="6" class="text-center trx-keluar-header">KDF BARANG KELUAR (PEMINJAMAN)</th>
-                <th colspan="6" class="text-center trx-masuk-header">KDF BARANG MASUK (PENGEMBALIAN)</th>
-                <th rowspan="2" class="text-center bg-dark text-white align-middle no-print">Aksi</th>
-              </tr>
-              <tr style="font-size: 0.78rem;">
-                <th class="trx-keluar-header">Tanggal</th>
-                <th class="trx-keluar-header">Petugas Serah</th>
-                <th class="trx-keluar-header">Penerima</th>
-                <th class="trx-keluar-header">No. BA / Jenis</th>
-                <th class="trx-keluar-header text-center no-print">Foto Kegiatan</th>
-                <th class="trx-keluar-header">Lokasi Pinjam</th>
-                <th class="trx-masuk-header">Tanggal</th>
-                <th class="trx-masuk-header">Petugas Terima</th>
-                <th class="trx-masuk-header">Petugas Serah</th>
-                <th class="trx-masuk-header">No. BA / Jenis</th>
-                <th class="trx-masuk-header text-center no-print">Foto Kegiatan</th>
-                <th class="trx-masuk-header">Lokasi Kembali</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${historyRows}
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-    `;
-  }
-
-  function openAddModal(itemId) {
-    const item = globalData.find(i => i.id === itemId);
-    if (!item) return;
-
-    removeStrayBackdrops();
-
-    const alertBox = document.getElementById('formAlertBox');
-    if (alertBox) alertBox.style.display = 'none';
-
-    document.getElementById('modalTrxTitle').innerHTML = '<i class="bi bi-plus-circle me-2"></i> Tambah Transaksi Riwayat Baru';
-    document.getElementById('trxForm').reset();
-    document.getElementById('formRowIndex').value = '';
-    document.getElementById('formMasterRowIndex').value = item.masterRowIndex || '';
-    document.getElementById('formItemNup').value = item.nup || '';
-    document.getElementById('formItemNopol').value = item.nopol || '';
-
-    const modal = getModalInstance();
-    if (modal) {
-      modal.show();
-    } else {
-      const modalEl = document.getElementById('modalTrxForm');
-      if (modalEl) {
-        modalEl.classList.add('show');
-        modalEl.style.display = 'block';
-      }
-    }
-  }
-
-  function openEditModal(itemId, rowIndex) {
-    const item = globalData.find(i => i.id === itemId);
-    if (!item) return;
-    const historyItem = item.history.find(h => h.rowIndex === rowIndex);
-    if (!historyItem) return;
-
-    removeStrayBackdrops();
-
-    const alertBox = document.getElementById('formAlertBox');
-    if (alertBox) alertBox.style.display = 'none';
-
-    document.getElementById('modalTrxTitle').innerHTML = '<i class="bi bi-pencil-square me-2"></i> Edit Transaksi Riwayat';
-    document.getElementById('formRowIndex').value = rowIndex;
-    document.getElementById('formMasterRowIndex').value = item.masterRowIndex || '';
-    document.getElementById('formItemNup').value = item.nup || '';
-    document.getElementById('formItemNopol').value = item.nopol || '';
-
-    document.getElementById('formKeluarTgl').value = formatDateForInput(historyItem.keluarTgl);
-    document.getElementById('formKeluarPetugasSerah').value = historyItem.keluarPetugasSerah || '';
-    document.getElementById('formKeluarPetugasTerima').value = historyItem.keluarPetugasTerima || '';
-    document.getElementById('formKeluarBA').value = historyItem.keluarBA || '';
-    document.getElementById('formKeluarFoto').value = historyItem.keluarFoto || '';
-    document.getElementById('formKeluarLokasi').value = historyItem.keluarLokasi || '';
-
-    document.getElementById('formMasukTgl').value = formatDateForInput(historyItem.masukTgl);
-    document.getElementById('formMasukPetugasTerima').value = historyItem.masukPetugasTerima || '';
-    document.getElementById('formMasukPetugasSerah').value = historyItem.masukPetugasSerah || '';
-    document.getElementById('formMasukBA').value = historyItem.masukBA || '';
-    document.getElementById('formMasukFoto').value = historyItem.masukFoto || '';
-    document.getElementById('formMasukLokasi').value = historyItem.masukLokasi || '';
-
-    const modal = getModalInstance();
-    if (modal) {
-      modal.show();
-    } else {
-      const modalEl = document.getElementById('modalTrxForm');
-      if (modalEl) {
-        modalEl.classList.add('show');
-        modalEl.style.display = 'block';
-      }
-    }
-  }
-
-  async function submitTrxForm() {
-    const btnSubmit = document.getElementById('btnSubmitForm');
-    const alertBox = document.getElementById('formAlertBox');
-    alertBox.style.display = 'none';
-
-    const payload = {
-      action: 'saveTransaksi',
-      rowIndex: document.getElementById('formRowIndex').value,
-      masterRowIndex: document.getElementById('formMasterRowIndex').value,
-      nup: document.getElementById('formItemNup').value,
-      nopol: document.getElementById('formItemNopol').value,
-      keluarTgl: document.getElementById('formKeluarTgl').value,
-      keluarPetugasSerah: document.getElementById('formKeluarPetugasSerah').value,
-      keluarPetugasTerima: document.getElementById('formKeluarPetugasTerima').value,
-      keluarBA: document.getElementById('formKeluarBA').value,
-      keluarFoto: document.getElementById('formKeluarFoto').value,
-      keluarLokasi: document.getElementById('formKeluarLokasi').value,
-      masukTgl: document.getElementById('formMasukTgl').value,
-      masukPetugasTerima: document.getElementById('formMasukPetugasTerima').value,
-      masukPetugasSerah: document.getElementById('formMasukPetugasSerah').value,
-      masukBA: document.getElementById('formMasukBA').value,
-      masukFoto: document.getElementById('formMasukFoto').value,
-      masukLokasi: document.getElementById('formMasukLokasi').value
-    };
-
-    btnSubmit.disabled = true;
-    btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
-
-    try {
-      const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
-
-      const res = await response.json();
-      if (!res.success) throw new Error(res.error || 'Gagal menyimpan transaksi.');
-
-      closeModalDirectly();
-      showToastNotice('<i class="bi bi-check-circle me-1"></i> Transaksi berhasil disimpan!');
-      await fetchDatabaseData(true);
-
-    } catch (err) {
-      alertBox.style.display = 'block';
-      alertBox.innerHTML = `<strong>Error:</strong> ${err.message || err}`;
-    } finally {
-      btnSubmit.disabled = false;
-      btnSubmit.innerHTML = '<i class="bi bi-save me-1"></i> Simpan Transaksi';
-    }
-  }
-
-  async function deleteTransaksiConfirm(rowIndex) {
-    if (!confirm('Apakah Anda yakin ingin menghapus baris transaksi riwayat ini?')) return;
-
-    updateSyncBadge('bg-warning text-dark', '<i class="bi bi-trash me-1"></i> Menghapus Transaksi...');
-
-    try {
-      const payload = {
-        action: 'deleteTransaksi',
-        rowIndex: rowIndex
-      };
-
-      const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
-
-      const res = await response.json();
-      if (!res.success) throw new Error(res.error || 'Gagal menghapus transaksi.');
-
-      showToastNotice('<i class="bi bi-check-circle me-1"></i> Transaksi berhasil dihapus!');
-      await fetchDatabaseData(true);
-
-    } catch (err) {
-      alert('Gagal menghapus transaksi: ' + (err.message || err));
-      updateSyncBadge('bg-danger', '<i class="bi bi-x-circle me-1"></i> Gagal Hapus');
-    }
-  }
-</script>
+                feedbackEl.textContent = "Terima kasih! Anda akan menerima notifikasi saat sistem aktif.";
+                feedbackEl.className = "text-xs text-center text-emerald-400 block mt-2";
+                emailInput.value = "";
+            } catch (error) {
+                feedbackEl.textContent = "Terjadi kesalahan. Silakan coba beberapa saat lagi.";
+                feedbackEl.className = "text-xs text-center text-rose-400 block mt-2";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Beritahu Saya</span>';
+            }
+        }
+    </script>
+</body>
+</html>
